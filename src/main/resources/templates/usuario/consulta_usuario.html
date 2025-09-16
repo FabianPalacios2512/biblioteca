@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Consulta de Usuario</title>
+    <link rel="stylesheet" th:href="@{/css/estilos.css}" />
+</head>
+<body>
+    <style>
+        body { font-family: 'Segoe UI', Arial, sans-serif; background: #f7f7f7; margin: 0; padding: 0; }
+        h1 { color: #2c3e50; margin-top: 30px; text-align: center; }
+        p { background: #fff; border-radius: 6px; box-shadow: 0 2px 6px #eee; padding: 10px 20px; margin: 10px auto; max-width: 400px; }
+        strong { color: #34495e; }
+        a { display: block; margin: 30px auto; text-align: center; color: #2980b9; text-decoration: none; font-weight: bold; }
+        a:hover { color: #1abc9c; }
+    </style>
+    <h1 th:text="${titulo}">Consulta de Usuario</h1>
+    <p><strong>ID:</strong> <span th:text="${usuario.id}"></span></p>
+    <p><strong>Identificación:</strong> <span th:text="${usuario.identificacion}"></span></p>
+    <p><strong>Teléfono:</strong> <span th:text="${usuario.telefonoMovil}"></span></p>
+    <p><strong>Nombre:</strong> <span th:text="${usuario.nombreCompleto}"></span></p>
+    <p><strong>Correo:</strong> <span th:text="${usuario.correoElectronico}"></span></p>
+    <div style="max-width:600px;margin:40px auto 0 auto;">
+        <h2 style="color:#2980b9;text-align:center;margin-bottom:20px;">Libros Prestados</h2>
+        <table style="width:100%;background:#fff;border-radius:8px;box-shadow:0 2px 8px #eee;">
+            <thead>
+                <tr style="background:#2980b9;color:#fff;">
+                    <th style="padding:10px;">Título</th>
+                    <th style="padding:10px;">Fecha devolución</th>
+                    <th style="padding:10px;">Días restantes</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="libro : ${librosPrestados}">
+                    <td th:text="${libro.titulo}" style="padding:10px;text-align:center;"></td>
+                    <td th:text="${libro.fechaDevolucion}" style="padding:10px;text-align:center;"></td>
+                    <td th:text="${libro.diasRestantes}" style="padding:10px;text-align:center;"></td>
+                </tr>
+                <tr th:if="${#lists.isEmpty(librosPrestados)}">
+                    <td colspan="3" style="text-align:center;color:#888;padding:20px;">No tiene libros prestados.</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <a th:href="@{/biblioteca/usuarios}">Volver al listado</a>
+    <a th:href="@{/biblioteca/menu}" class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-semibold py-2 px-6 rounded-lg shadow transition" style="display:block;max-width:200px;margin:20px auto 0 auto;text-align:center;">Menú Principal</a>
+</body>
+</html>

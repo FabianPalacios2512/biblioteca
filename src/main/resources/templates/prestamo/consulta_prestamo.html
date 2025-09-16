@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Consulta de Préstamo</title>
+    <link rel="stylesheet" th:href="@{/css/estilos.css}" />
+</head>
+<body>
+    <style>
+        body { font-family: 'Segoe UI', Arial, sans-serif; background: #f7f7f7; }
+        h1 { color: #2c3e50; margin-top: 30px; text-align: center; }
+        p { background: #fff; border-radius: 6px; box-shadow: 0 2px 6px #eee; padding: 10px 20px; margin: 10px auto; max-width: 400px; }
+        strong { color: #34495e; }
+        a { display: block; margin: 30px auto; text-align: center; color: #2980b9; text-decoration: none; font-weight: bold; }
+        a:hover { color: #1abc9c; }
+    </style>
+    <h1 th:text="${titulo}">Consulta de Préstamo</h1>
+    <p><strong>ID:</strong> <span th:text="${prestamo.id}"></span></p>
+    <p><strong>Fecha Préstamo:</strong> <span th:text="${prestamo.fechaPrestamo}"></span></p>
+    <p><strong>Fecha Devolución:</strong> <span th:text="${prestamo.fechaDevolucion}"></span></p>
+    <p><strong>Observación:</strong> <span th:text="${prestamo.observacion}"></span></p>
+    <p><strong>Libro:</strong> <span th:text="${prestamo.libro.titulo}"></span></p>
+    <p><strong>Usuario:</strong> <span th:text="${prestamo.usuario.nombreCompleto}"></span></p>
+    <a th:href="@{/biblioteca/prestamos}">Volver al listado</a>
+    <a th:href="@{/biblioteca/menu}" class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-semibold py-2 px-6 rounded-lg shadow transition" style="display:block;max-width:200px;margin:20px auto 0 auto;text-align:center;">Menú Principal</a>
+</body>
+</html>
