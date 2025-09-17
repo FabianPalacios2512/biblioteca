@@ -30,7 +30,7 @@
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-200">
-                    <!-- Filas dinámicas -->
+                    
                     <tr th:each="libro : ${libros}" class="hover:bg-blue-50">
                         <td th:text="${libro.id}" class="py-3 px-4"></td>
                         <td th:text="${libro.isbn}" class="py-3 px-4"></td>
@@ -51,7 +51,7 @@
                         </td>
                     </tr>
 
-                    <!-- Mensaje cuando no hay registros -->
+                    
                     <tr th:if="${#lists.isEmpty(libros)}">
                         <td colspan="8" class="text-center text-gray-500 py-8">
                             No hay libros registrados.
@@ -60,8 +60,8 @@
                 </tbody>
             </table>
         </div>
-        <!-- Paginador reutilizable -->
-        <div th:replace="plantillas/paginator :: paginator(${page})"></div>
+        <!-- Paginador dinámico solo JS -->
+        <div id="paginador-js"></div>
     </main>
 
     <!-- Botones inferiores -->
@@ -77,5 +77,93 @@
     </footer>
     <!-- Floter profesional -->
     <div th:replace="plantillas/floter :: floter"></div>
+    <script>
+// Consulta y paginación de libros desde el front-end usando fetch
+(function() {
+    let currentPage = 0;
+    function renderLibros(page = 0) {
+        currentPage = page;
+        fetch(`/biblioteca/api/libros/paginados?page=${page}&size=7`)
+            .then(response => response.json())
+            .then(data => {
+                const libros = data.content;
+                const totalPages = data.totalPages;
+                const tbody = document.createElement('tbody');
+                tbody.className = 'divide-y divide-gray-200';
+                if (libros.length === 0) {
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = '<td colspan="8" class="text-center text-gray-500 py-8">No hay libros registrados.</td>';
+                    tbody.appendChild(tr);
+                } else {
+                    libros.forEach(libro => {
+                        const tr = document.createElement('tr');
+                        tr.className = 'hover:bg-blue-50';
+                        tr.innerHTML = `
+                            <td class="py-3 px-4">${libro.id}</td>
+                            <td class="py-3 px-4">${libro.isbn}</td>
+                            <td class="py-3 px-4">${libro.titulo}</td>
+                            <td class="py-3 px-4">${libro.autor}</td>
+                            <td class="py-3 px-4">${libro.editorial}</td>
+                            <td class="py-3 px-4">${libro.anio}</td>
+                            <td class="py-3 px-4">${libro.edicion}</td>
+                            <td class="py-3 px-4 flex justify-center gap-3">
+                                <a href="/biblioteca/libro/${libro.id}" class="bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium px-4 py-2 rounded-lg shadow transition">Ver</a>
+                                <a href="/biblioteca/libro/eliminar/${libro.id}" class="bg-red-500 hover:bg-red-600 text-white text-sm font-medium px-4 py-2 rounded-lg shadow transition">Eliminar</a>
+                            </td>
+                        `;
+                        tbody.appendChild(tr);
+                    });
+                }
+                
+                const table = document.querySelector('table');
+                const oldTbody = table.querySelector('tbody');
+                oldTbody.style.display = 'none';
+                
+                const tbodies = table.querySelectorAll('tbody');
+                tbodies.forEach((tb, idx) => { if (idx > 0) tb.remove(); });
+                table.appendChild(tbody);
+
+                
+                const paginadorDiv = document.getElementById('paginador-js');
+                paginadorDiv.innerHTML = '';
+                if (totalPages > 1) {
+                    const nav = document.createElement('nav');
+                    nav.className = 'flex justify-center my-8';
+                    const ul = document.createElement('ul');
+                    ul.className = 'inline-flex items-center space-x-1';
+                    
+                    if (currentPage > 0) {
+                        const liPrev = document.createElement('li');
+                        liPrev.innerHTML = `<a href="#" class="px-3 py-2 rounded-l-lg bg-white border border-gray-300 text-blue-600 hover:bg-blue-100 transition">&laquo;</a>`;
+                        liPrev.querySelector('a').onclick = function(e) { e.preventDefault(); renderLibros(currentPage - 1); };
+                        ul.appendChild(liPrev);
+                    }
+                    
+                    for (let i = 0; i < totalPages; i++) {
+                        const li = document.createElement('li');
+                        li.innerHTML = `<a href="#" class="px-3 py-2 border border-gray-300 rounded-lg hover:bg-blue-100 transition ${i === currentPage ? 'bg-blue-600 text-white' : 'bg-white text-blue-600'}">${i + 1}</a>`;
+                        li.querySelector('a').onclick = function(e) { e.preventDefault(); renderLibros(i); };
+                        ul.appendChild(li);
+                    }
+                    
+                    if (currentPage < totalPages - 1) {
+                        const liNext = document.createElement('li');
+                        liNext.innerHTML = `<a href="#" class="px-3 py-2 rounded-r-lg bg-white border border-gray-300 text-blue-600 hover:bg-blue-100 transition">&raquo;</a>`;
+                        liNext.querySelector('a').onclick = function(e) { e.preventDefault(); renderLibros(currentPage + 1); };
+                        ul.appendChild(liNext);
+                    }
+                    nav.appendChild(ul);
+                    paginadorDiv.appendChild(nav);
+                }
+            })
+            .catch(err => {
+                console.error('Error consultando libros:', err);
+            });
+    }
+    window.addEventListener('DOMContentLoaded', function() {
+        renderLibros(0);
+    });
+})();
+</script>
 </body>
 </html>

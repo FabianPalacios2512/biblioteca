@@ -6,7 +6,7 @@
 </head>
 <body class="bg-gray-100 min-h-screen flex flex-col font-sans">
 
-    <!-- Contenedor central -->
+    
     <div class="flex-grow flex items-center justify-center">
         <div class="bg-white rounded-2xl shadow-lg p-8 w-full max-w-md">
             
@@ -27,7 +27,7 @@
                 <p><strong class="text-gray-900">Edición:</strong> <span th:text="${libro.edicion}"></span></p>
             </div>
 
-            <!-- Botones -->
+           
             <div class="mt-8 flex flex-col gap-3">
                 <a th:href="@{/biblioteca/libros}" 
                    class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg text-center shadow transition">
@@ -41,7 +41,7 @@
         </div>
     </div>
 
-    <!-- Footer -->
+    
     <footer >
         <div th:replace="plantillas/floter :: floter"></div>
     </footer>

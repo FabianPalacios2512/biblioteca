@@ -31,10 +31,10 @@
 
     <h1 th:text="${titulo}"></h1>
 
-    <!-- ✅ Mensaje de éxito (cuando se guarda el registro) -->
+    <!--  Mensaje de éxito (cuando se guarda el registro) -->
     <div th:if="${mensajeExito}" class="msg-box msg-success" th:text="${mensajeExito}"></div>
 
-    <!-- ❌ Mensaje general de error -->
+    <!--  Mensaje general de error -->
     <div th:if="${errorPrestamo}" class="msg-box msg-error" th:text="${errorPrestamo}"></div>
 
     <!-- Formulario -->

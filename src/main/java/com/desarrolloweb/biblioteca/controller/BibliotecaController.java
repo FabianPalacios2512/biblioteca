@@ -1,4 +1,4 @@
-
+    
 package com.desarrolloweb.biblioteca.controller;
 
 import java.util.List;
@@ -15,6 +15,19 @@ import com.desarrolloweb.biblioteca.model.service.BibliotecaServiceIface;
 @RequestMapping("/biblioteca")
 @SessionAttributes({"usuario", "libro", "prestamo"})
 public class BibliotecaController {
+    // --- API REST paginada para consulta de libros ---
+    @GetMapping("/api/libros/paginados")
+    @ResponseBody
+    public org.springframework.data.domain.Page<Libro> apiLibrosPaginados(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "7") int size) {
+        org.springframework.data.domain.Pageable pageable = org.springframework.data.domain.PageRequest.of(page, size);
+        return bibliotecaService.buscarLibrosPaginados(pageable);
+    }
+    // --- API REST para consulta de libros ---
+    @GetMapping("/api/libros")
+    @ResponseBody
+    public java.util.List<Libro> apiLibros() {
+        return bibliotecaService.buscarLibrosTodos();
+    }
 
     private final BibliotecaServiceIface bibliotecaService;
 
@@ -164,7 +177,7 @@ public class BibliotecaController {
             redirectAttributes.addFlashAttribute("mensajeExito", "Datos guardados correctamente.");
             return "redirect:/biblioteca/prestamos";
         } catch (IllegalStateException e) {
-            // Si el usuario tiene el máximo de préstamos, mostrar mensaje en el formulario
+            
             Prestamo nuevoPrestamo = new Prestamo();
             nuevoPrestamo.setFechaPrestamo(java.time.LocalDate.now());
             nuevoPrestamo.setUsuario(prestamo.getUsuario());
@@ -179,7 +192,7 @@ public class BibliotecaController {
             return "prestamo/formulario_prestamo";
         }
     }
-    // ...existing code...
+    
 
     @GetMapping("/prestamo/eliminar/{id}")
     public String eliminarPrestamo(@PathVariable Long id) {
