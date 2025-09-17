@@ -3,32 +3,140 @@
 <head>
     <title th:text="${titulo}">Formulario Usuario</title>
     <link rel="stylesheet" th:href="@{/css/estilos.css}" />
+    <style>
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background: #f4f6f9;
+            margin: 0;
+            padding: 0;
+        }
+        h1 {
+            color: #2c3e50;
+            text-align: center;
+            margin: 40px 0 20px 0;
+            font-size: 28px;
+        }
+        .form-container {
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            padding: 35px;
+            max-width: 450px;
+            margin: 0 auto 40px auto;
+        }
+        label {
+            display: block;
+            margin-top: 18px;
+            font-weight: 600;
+            color: #34495e;
+            font-size: 14px;
+        }
+        input, select {
+            width: 100%;
+            padding: 10px 12px;
+            margin-top: 6px;
+            border-radius: 6px;
+            border: 1px solid #ccc;
+            font-size: 15px;
+            transition: border 0.3s ease, box-shadow 0.3s ease;
+        }
+        input:focus {
+            border-color: #2980b9;
+            box-shadow: 0 0 6px rgba(41, 128, 185, 0.3);
+            outline: none;
+        }
+        button {
+            background: #2980b9;
+            color: #fff;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 6px;
+            margin-top: 25px;
+            cursor: pointer;
+            width: 100%;
+            font-size: 16px;
+            font-weight: 600;
+            transition: background 0.3s ease;
+        }
+        button:hover {
+            background: #1abc9c;
+        }
+        .links {
+            text-align: center;
+            margin-top: 25px;
+        }
+        .links a {
+            display: inline-block;
+            margin: 8px;
+            padding: 10px 18px;
+            border-radius: 8px;
+            font-weight: bold;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+        .links a:first-child {
+            background: transparent;
+            color: #2980b9;
+        }
+        .links a:first-child:hover {
+            color: #1abc9c;
+        }
+        .links a:last-child {
+            background: #2980b9;
+            color: #fff;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+        }
+        .links a:last-child:hover {
+            background: #1abc9c;
+        }
+        .error-box {
+            margin: 20px auto;
+            max-width: 450px;
+            background: #ffe6e6;
+            color: #b71c1c;
+            padding: 12px 18px;
+            border-radius: 8px;
+            border: 1px solid #f5c6c6;
+            font-size: 14px;
+            text-align: center;
+            font-weight: 600;
+        }
+    </style>
 </head>
 <body>
-    <style>
-        body { font-family: 'Segoe UI', Arial, sans-serif; background: #f7f7f7; }
-        h1 { color: #2c3e50; text-align: center; margin-top: 30px; }
-        form { background: #fff; border-radius: 8px; box-shadow: 0 2px 8px #eee; padding: 30px; max-width: 400px; margin: 30px auto; }
-        label { display: block; margin-top: 15px; color: #34495e; }
-        input, select { width: 100%; padding: 8px; margin-top: 5px; border-radius: 4px; border: 1px solid #ccc; }
-        button { background: #2980b9; color: #fff; border: none; padding: 10px 20px; border-radius: 4px; margin-top: 20px; cursor: pointer; }
-        button:hover { background: #1abc9c; }
-        a { display: block; margin-top: 20px; text-align: center; color: #2980b9; text-decoration: none; }
-        a:hover { color: #1abc9c; }
-    </style>
-    <h1 th:text="${titulo}"></h1>
-    <form th:action="@{/biblioteca/usuario/guardar}" th:object="${usuario}" method="post">
-        <label>Identificación:</label>
-        <input type="text" th:field="*{identificacion}" /><br/>
-        <label>Teléfono:</label>
-        <input type="text" th:field="*{telefonoMovil}" /><br/>
-        <label>Nombre Completo:</label>
-        <input type="text" th:field="*{nombreCompleto}" /><br/>
-        <label>Correo Electrónico:</label>
-        <input type="email" th:field="*{correoElectronico}" /><br/>
-        <button type="submit" th:text="${accion}"></button>
-    <a th:href="@{/biblioteca/usuarios}">Cancelar</a>
-    <a th:href="@{/biblioteca/menu}" class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-semibold py-2 px-6 rounded-lg shadow transition" style="display:block;max-width:200px;margin:20px auto 0 auto;text-align:center;">Menú Principal</a>
-    </form>
+
+    <h1 th:text="${titulo}">Formulario Usuario</h1>
+
+    <!-- Mensaje de error -->
+    <div th:if="${errorUsuario}" class="error-box">
+        <span th:text="${errorUsuario}"></span>
+    </div>
+
+    <div class="form-container">
+        <form th:action="@{/biblioteca/usuario/guardar}" th:object="${usuario}" method="post">
+            
+            <label>Identificación:</label>
+            <input type="text" th:field="*{identificacion}" pattern="[0-9]+" title="Solo números" required />
+
+            <label>Teléfono:</label>
+            <input type="text" th:field="*{telefonoMovil}" pattern="[0-9]+" title="Solo números" required />
+
+            <label>Nombre Completo:</label>
+            <input type="text" th:field="*{nombreCompleto}" 
+                   pattern="[A-Za-zÁÉÍÓÚáéíóúÑñ ]+" 
+                   title="Solo letras y espacios" required />
+
+            <label>Correo Electrónico:</label>
+            <input type="email" th:field="*{correoElectronico}" required />
+
+            <button type="submit" th:text="${accion}">Guardar</button>
+        </form>
+
+        <div class="links">
+            <a th:href="@{/biblioteca/usuarios}">Cancelar</a>
+            <a th:href="@{/biblioteca/menu}">Menú Principal</a>
+        </div>
+    </div>
+
 </body>
 </html>

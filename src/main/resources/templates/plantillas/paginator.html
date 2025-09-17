@@ -1,0 +1,34 @@
+<!-- Paginator fragment for Thymeleaf reuse -->
+<div th:fragment="paginator(page)">
+    <nav class="flex justify-center mt-10">
+        <ul class="inline-flex items-center gap-1 text-sm font-medium">
+            
+            <!-- Botón anterior -->
+            <li th:if="${page.hasPrevious()}">
+                <a th:href="@{/biblioteca/libros(page=${page.previousPageable().pageNumber})}" 
+                   class="flex items-center px-3 py-2 rounded-lg border border-gray-300 bg-white text-gray-600 hover:bg-gray-100 transition">
+                    &laquo;
+                </a>
+            </li>
+            
+            <!-- Números de página -->
+            <li th:each="i : ${#numbers.sequence(0, page.totalPages - 1)}">
+                <a th:href="@{/biblioteca/libros(page=${i})}" 
+                   th:text="${i + 1}"
+                   th:classappend="${i == page.number} 
+                        ? 'bg-blue-600 text-white border-blue-600' 
+                        : 'bg-white text-gray-700 hover:bg-gray-100 border-gray-300'"
+                   class="px-3 py-2 rounded-lg border transition">
+                </a>
+            </li>
+            
+            <!-- Botón siguiente -->
+            <li th:if="${page.hasNext()}">
+                <a th:href="@{/biblioteca/libros(page=${page.nextPageable().pageNumber})}" 
+                   class="flex items-center px-3 py-2 rounded-lg border border-gray-300 bg-white text-gray-600 hover:bg-gray-100 transition">
+                    &raquo;
+                </a>
+            </li>
+        </ul>
+    </nav>
+</div>

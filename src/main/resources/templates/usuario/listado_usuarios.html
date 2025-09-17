@@ -4,45 +4,74 @@
     <title>Listado de Usuarios</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body>
-    <!-- Tailwind CSS incluido -->
-    <h1 th:text="${titulo}" class="text-3xl font-bold text-center text-blue-900 mt-8 mb-6 tracking-wide">Listado de Usuarios</h1>
-    <div class="overflow-x-auto w-11/12 mx-auto mb-6">
-        <table class="min-w-full bg-white rounded-lg shadow-md">
+<body class="bg-gray-50 font-sans">
+    
+    <!-- Título -->
+    <h1 th:text="${titulo}" 
+        class="text-3xl font-bold text-center text-blue-900 mt-10 mb-6 tracking-wide">
+        Listado de Usuarios
+    </h1>
+
+    <!-- Mensajes de acción -->
+    <div th:if="${mensajeExito}" 
+         class="mb-6 w-11/12 md:w-3/4 lg:w-1/2 mx-auto p-4 bg-green-100 text-green-700 rounded-lg text-center font-semibold shadow">
+        <span th:text="${mensajeExito}"></span>
+    </div>
+    <div th:if="${mensajeError}" 
+         class="mb-6 w-11/12 md:w-3/4 lg:w-1/2 mx-auto p-4 bg-red-100 text-red-700 rounded-lg text-center font-semibold shadow">
+        <span th:text="${mensajeError}"></span>
+    </div>
+
+    <!-- Tabla -->
+    <div class="overflow-x-auto w-11/12 mx-auto mb-8">
+        <table class="min-w-full bg-white rounded-lg shadow-lg border border-gray-200">
             <thead>
                 <tr>
-                    <th class="bg-gradient-to-r from-blue-700 to-teal-400 text-white py-3 px-2 text-sm">ID</th>
-                    <th class="bg-gradient-to-r from-blue-700 to-teal-400 text-white py-3 px-2 text-sm">Identificación</th>
-                    <th class="bg-gradient-to-r from-blue-700 to-teal-400 text-white py-3 px-2 text-sm">Teléfono</th>
-                    <th class="bg-gradient-to-r from-blue-700 to-teal-400 text-white py-3 px-2 text-sm">Nombre</th>
-                    <th class="bg-gradient-to-r from-blue-700 to-teal-400 text-white py-3 px-2 text-sm">Correo</th>
-                    <th class="bg-gradient-to-r from-blue-700 to-teal-400 text-white py-3 px-2 text-sm">Acciones</th>
+                    <th class="bg-gradient-to-r from-blue-700 to-teal-400 text-white py-3 px-3 text-sm uppercase">ID</th>
+                    <th class="bg-gradient-to-r from-blue-700 to-teal-400 text-white py-3 px-3 text-sm uppercase">Identificación</th>
+                    <th class="bg-gradient-to-r from-blue-700 to-teal-400 text-white py-3 px-3 text-sm uppercase">Teléfono</th>
+                    <th class="bg-gradient-to-r from-blue-700 to-teal-400 text-white py-3 px-3 text-sm uppercase">Nombre</th>
+                    <th class="bg-gradient-to-r from-blue-700 to-teal-400 text-white py-3 px-3 text-sm uppercase">Correo</th>
+                    <th class="bg-gradient-to-r from-blue-700 to-teal-400 text-white py-3 px-3 text-sm uppercase">Acciones</th>
                 </tr>
             </thead>
             <tbody>
-                <tr th:each="usuario : ${usuarios}" class="hover:bg-blue-50">
-                    <td th:text="${usuario.id}" class="py-2 px-2 border-b"></td>
-                    <td th:text="${usuario.identificacion}" class="py-2 px-2 border-b"></td>
-                    <td th:text="${usuario.telefonoMovil}" class="py-2 px-2 border-b"></td>
-                    <td th:text="${usuario.nombreCompleto}" class="py-2 px-2 border-b"></td>
-                    <td th:text="${usuario.correoElectronico}" class="py-2 px-2 border-b"></td>
-                    <td class="py-2 px-2 border-b flex gap-2 justify-center">
-                        <a th:href="@{/biblioteca/usuario/{id}(id=${usuario.id})}" class="bg-blue-600 hover:bg-blue-800 text-white font-semibold py-1 px-3 rounded transition">Ver</a>
-                        <a th:href="@{/biblioteca/usuario/eliminar/{id}(id=${usuario.id})}" class="bg-red-500 hover:bg-red-700 text-white font-semibold py-1 px-3 rounded transition">Eliminar</a>
+                <tr th:each="usuario : ${usuarios}" class="hover:bg-blue-50 transition">
+                    <td th:text="${usuario.id}" class="py-3 px-3 border-b text-center"></td>
+                    <td th:text="${usuario.identificacion}" class="py-3 px-3 border-b text-center"></td>
+                    <td th:text="${usuario.telefonoMovil}" class="py-3 px-3 border-b text-center"></td>
+                    <td th:text="${usuario.nombreCompleto}" class="py-3 px-3 border-b text-center"></td>
+                    <td th:text="${usuario.correoElectronico}" class="py-3 px-3 border-b text-center"></td>
+                    <td class="py-3 px-3 border-b flex gap-2 justify-center">
+                        <a th:href="@{/biblioteca/usuario/{id}(id=${usuario.id})}" 
+                           class="bg-blue-600 hover:bg-blue-800 text-white font-semibold py-1.5 px-4 rounded-lg shadow transition">
+                           Ver
+                        </a>
+                        <a th:href="@{/biblioteca/usuario/eliminar/{id}(id=${usuario.id})}" 
+                           class="bg-red-500 hover:bg-red-700 text-white font-semibold py-1.5 px-4 rounded-lg shadow transition">
+                           Eliminar
+                        </a>
                     </td>
                 </tr>
+                <!-- Mensaje si la lista está vacía -->
                 <tr th:if="${#lists.isEmpty(usuarios)}">
                     <td colspan="6" class="text-center text-gray-500 py-8">No hay usuarios registrados.</td>
                 </tr>
             </tbody>
         </table>
     </div>
-    <div class="flex justify-center mb-10">
-        <a th:href="@{/biblioteca/usuario/nuevo}" class="bg-teal-500 hover:bg-teal-700 text-white font-bold py-3 px-8 rounded-lg shadow transition">+ Nuevo Usuario</a>
+
+    <!-- Botones de acción -->
+    <div class="flex flex-col md:flex-row gap-4 justify-center mb-12">
+        <a th:href="@{/biblioteca/usuario/nuevo}" 
+           class="bg-teal-500 hover:bg-teal-700 text-white font-bold py-3 px-8 rounded-lg shadow transition text-center">
+           + Nuevo Usuario
+        </a>
+        <a th:href="@{/biblioteca/menu}" 
+           class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-semibold py-3 px-8 rounded-lg shadow transition text-center">
+           Menú Principal
+        </a>
     </div>
-    </table>
-    <div class="flex justify-center mb-10">
-        <a th:href="@{/biblioteca/menu}" class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-semibold py-2 px-6 rounded-lg shadow transition">Menú Principal</a>
-    </div>
+
 </body>
 </html>

@@ -2,26 +2,49 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>Consulta de Libro</title>
-    <link rel="stylesheet" th:href="@{/css/estilos.css}" />
+    <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body>
-    <style>
-        body { font-family: 'Segoe UI', Arial, sans-serif; background: #f7f7f7; margin: 0; padding: 0; }
-        h1 { color: #2c3e50; margin-top: 30px; text-align: center; }
-        p { background: #fff; border-radius: 6px; box-shadow: 0 2px 6px #eee; padding: 10px 20px; margin: 10px auto; max-width: 400px; }
-        strong { color: #34495e; }
-        a { display: block; margin: 30px auto; text-align: center; color: #2980b9; text-decoration: none; font-weight: bold; }
-        a:hover { color: #1abc9c; }
-    </style>
-    <h1 th:text="${titulo}">Consulta de Libro</h1>
-    <p><strong>ID:</strong> <span th:text="${libro.id}"></span></p>
-    <p><strong>ISBN:</strong> <span th:text="${libro.isbn}"></span></p>
-    <p><strong>Título:</strong> <span th:text="${libro.titulo}"></span></p>
-    <p><strong>Autor:</strong> <span th:text="${libro.autor}"></span></p>
-    <p><strong>Editorial:</strong> <span th:text="${libro.editorial}"></span></p>
-    <p><strong>Año:</strong> <span th:text="${libro.anio}"></span></p>
-    <p><strong>Edición:</strong> <span th:text="${libro.edicion}"></span></p>
-    <a th:href="@{/biblioteca/libros}">Volver al listado</a>
-    <a th:href="@{/biblioteca/menu}" class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-semibold py-2 px-6 rounded-lg shadow transition" style="display:block;max-width:200px;margin:20px auto 0 auto;text-align:center;">Menú Principal</a>
+<body class="bg-gray-100 min-h-screen flex flex-col font-sans">
+
+    <!-- Contenedor central -->
+    <div class="flex-grow flex items-center justify-center">
+        <div class="bg-white rounded-2xl shadow-lg p-8 w-full max-w-md">
+            
+            <!-- Título -->
+            <h1 th:text="${titulo}" 
+                class="text-3xl font-extrabold text-blue-900 text-center mb-6">
+                Consulta de Libro
+            </h1>
+            
+            <!-- Información del libro -->
+            <div class="space-y-3 text-gray-700">
+                <p><strong class="text-gray-900">ID:</strong> <span th:text="${libro.id}"></span></p>
+                <p><strong class="text-gray-900">ISBN:</strong> <span th:text="${libro.isbn}"></span></p>
+                <p><strong class="text-gray-900">Título:</strong> <span th:text="${libro.titulo}"></span></p>
+                <p><strong class="text-gray-900">Autor:</strong> <span th:text="${libro.autor}"></span></p>
+                <p><strong class="text-gray-900">Editorial:</strong> <span th:text="${libro.editorial}"></span></p>
+                <p><strong class="text-gray-900">Año:</strong> <span th:text="${libro.anio}"></span></p>
+                <p><strong class="text-gray-900">Edición:</strong> <span th:text="${libro.edicion}"></span></p>
+            </div>
+
+            <!-- Botones -->
+            <div class="mt-8 flex flex-col gap-3">
+                <a th:href="@{/biblioteca/libros}" 
+                   class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg text-center shadow transition">
+                    Volver al listado
+                </a>
+                <a th:href="@{/biblioteca/menu}" 
+                   class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-medium py-2 px-4 rounded-lg text-center shadow transition">
+                    Menú Principal
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer >
+        <div th:replace="plantillas/floter :: floter"></div>
+    </footer>
+
 </body>
 </html>

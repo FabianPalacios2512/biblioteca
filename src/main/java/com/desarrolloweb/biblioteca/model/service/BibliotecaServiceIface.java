@@ -6,6 +6,7 @@ import com.desarrolloweb.biblioteca.model.entity.Prestamo;
 import com.desarrolloweb.biblioteca.model.entity.Usuario;
 
 public interface BibliotecaServiceIface {
+    org.springframework.data.domain.Page<Libro> buscarLibrosPaginados(org.springframework.data.domain.Pageable pageable);
     List<Usuario> buscarUsuariosTodos();
     Usuario buscarUsuarioPorId(Long id);
     void guardarUsuario(Usuario usuario);

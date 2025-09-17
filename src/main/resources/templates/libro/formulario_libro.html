@@ -2,37 +2,84 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <title th:text="${titulo}">Formulario Libro</title>
-    <link rel="stylesheet" th:href="@{/css/estilos.css}" />
+    <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body>
-    <style>
-        body { font-family: 'Segoe UI', Arial, sans-serif; background: #f7f7f7; }
-        h1 { color: #2c3e50; text-align: center; margin-top: 30px; }
-        form { background: #fff; border-radius: 8px; box-shadow: 0 2px 8px #eee; padding: 30px; max-width: 400px; margin: 30px auto; }
-        label { display: block; margin-top: 15px; color: #34495e; }
-        input, select { width: 100%; padding: 8px; margin-top: 5px; border-radius: 4px; border: 1px solid #ccc; }
-        button { background: #2980b9; color: #fff; border: none; padding: 10px 20px; border-radius: 4px; margin-top: 20px; cursor: pointer; }
-        button:hover { background: #1abc9c; }
-        a { display: block; margin-top: 20px; text-align: center; color: #2980b9; text-decoration: none; }
-        a:hover { color: #1abc9c; }
-    </style>
-    <h1 th:text="${titulo}"></h1>
-    <form th:action="@{/biblioteca/libro/guardar}" th:object="${libro}" method="post">
-        <label>ISBN:</label>
-        <input type="text" th:field="*{isbn}" /><br/>
-        <label>Título:</label>
-        <input type="text" th:field="*{titulo}" /><br/>
-        <label>Autor:</label>
-        <input type="text" th:field="*{autor}" /><br/>
-        <label>Editorial:</label>
-        <input type="text" th:field="*{editorial}" /><br/>
-        <label>Año:</label>
-        <input type="text" th:field="*{anio}" /><br/>
-        <label>Edición:</label>
-        <input type="text" th:field="*{edicion}" /><br/>
-        <button type="submit" th:text="${accion}"></button>
-    <a th:href="@{/biblioteca/libros}">Cancelar</a>
-    <a th:href="@{/biblioteca/menu}" class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-semibold py-2 px-6 rounded-lg shadow transition" style="display:block;max-width:200px;margin:20px auto 0 auto;text-align:center;">Menú Principal</a>
-    </form>
+<body class="bg-gray-100 min-h-screen flex flex-col font-sans">
+
+    <!-- Encabezado -->
+    <header class="mt-10 text-center">
+        <h1 th:text="${titulo}" class="text-3xl font-extrabold text-blue-900"></h1>
+    </header>
+
+    <!-- Formulario -->
+    <main class="flex-1 flex items-center justify-center">
+        <form th:action="@{/biblioteca/libro/guardar}" 
+              th:object="${libro}" method="post"
+              class="bg-white rounded-2xl shadow-lg p-8 w-full max-w-md space-y-5">
+
+            <!-- ISBN -->
+            <div>
+                <label class="block text-gray-700 font-semibold">ISBN:</label>
+                <input type="text" th:field="*{isbn}" 
+                       class="w-full mt-2 px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"/>
+            </div>
+
+            <!-- Título -->
+            <div>
+                <label class="block text-gray-700 font-semibold">Título:</label>
+                <input type="text" th:field="*{titulo}" 
+                       class="w-full mt-2 px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"/>
+            </div>
+
+            <!-- Autor -->
+            <div>
+                <label class="block text-gray-700 font-semibold">Autor:</label>
+                <input type="text" th:field="*{autor}" 
+                       class="w-full mt-2 px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"/>
+            </div>
+
+            <!-- Editorial -->
+            <div>
+                <label class="block text-gray-700 font-semibold">Editorial:</label>
+                <input type="text" th:field="*{editorial}" 
+                       class="w-full mt-2 px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"/>
+            </div>
+
+            <!-- Año -->
+            <div>
+                <label class="block text-gray-700 font-semibold">Año:</label>
+                <input type="text" th:field="*{anio}" 
+                       class="w-full mt-2 px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"/>
+            </div>
+
+            <!-- Edición -->
+            <div>
+                <label class="block text-gray-700 font-semibold">Edición:</label>
+                <input type="text" th:field="*{edicion}" 
+                       class="w-full mt-2 px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"/>
+            </div>
+
+            <!-- Botones -->
+            <div class="flex flex-col gap-3 pt-4">
+                <button type="submit" th:text="${accion}" 
+                        class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg shadow transition">
+                </button>
+                <a th:href="@{/biblioteca/libros}" 
+                   class="bg-red-500 hover:bg-red-600 text-white font-medium py-2 px-4 rounded-lg text-center shadow transition">
+                    Cancelar
+                </a>
+                <a th:href="@{/biblioteca/menu}" 
+                   class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-medium py-2 px-4 rounded-lg text-center shadow transition">
+                    Menú Principal
+                </a>
+            </div>
+        </form>
+    </main>
+
+    <!-- Footer -->
+    <footer class="mt-10">
+        <div th:replace="plantillas/floter :: floter"></div>
+    </footer>
+
 </body>
 </html>

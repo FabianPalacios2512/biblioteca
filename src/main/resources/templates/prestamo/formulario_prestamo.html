@@ -8,61 +8,86 @@
     <style>
         body { font-family: 'Segoe UI', Arial, sans-serif; background: #f7f7f7; }
         h1 { color: #2c3e50; text-align: center; margin-top: 30px; }
-        form { background: #fff; border-radius: 8px; box-shadow: 0 2px 8px #eee; padding: 30px; max-width: 400px; margin: 30px auto; }
-        label { display: block; margin-top: 15px; color: #34495e; }
-        input, select { width: 100%; padding: 8px; margin-top: 5px; border-radius: 4px; border: 1px solid #ccc; }
-        button { background: #2980b9; color: #fff; border: none; padding: 10px 20px; border-radius: 4px; margin-top: 20px; cursor: pointer; }
+
+        form { background: #fff; border-radius: 8px; box-shadow: 0 2px 8px #eee; padding: 30px; max-width: 450px; margin: 30px auto; }
+
+        label { display: block; margin-top: 15px; color: #34495e; font-weight: 600; }
+        input, select { width: 100%; padding: 10px; margin-top: 5px; border-radius: 6px; border: 1px solid #ccc; font-size: 14px; }
+        input:focus, select:focus { border-color: #2980b9; outline: none; box-shadow: 0 0 4px rgba(41, 128, 185, 0.3); }
+
+        button { width: 100%; background: #2980b9; color: #fff; border: none; padding: 12px; border-radius: 6px; margin-top: 20px; cursor: pointer; font-size: 15px; font-weight: bold; transition: background 0.3s; }
         button:hover { background: #1abc9c; }
-        a { display: block; margin-top: 20px; text-align: center; color: #2980b9; text-decoration: none; }
+
+        a { display: block; margin-top: 15px; text-align: center; color: #2980b9; text-decoration: none; font-weight: 500; }
         a:hover { color: #1abc9c; }
+
+        /* --- Mensajes --- */
+        .msg-box { padding: 12px 16px; border-radius: 6px; margin: 20px auto; max-width: 450px; font-size: 14px; font-weight: 500; }
+        .msg-success { background: #eafaf1; border: 1px solid #2ecc71; color: #27ae60; }
+        .msg-error { background: #ffe6e6; border: 1px solid #e74c3c; color: #c0392b; }
+        .msg-info { background: #eaf4fc; border: 1px solid #3498db; color: #2980b9; }
+        .error-msg { color: #e74c3c; font-size: 13px; margin-top: 4px; }
     </style>
+
     <h1 th:text="${titulo}"></h1>
-    <div th:if="${errorPrestamo}" class="mb-4 p-3 bg-red-100 text-red-700 rounded">
-        <strong th:text="${errorPrestamo}"></strong>
-    </div>
+
+    <!-- ✅ Mensaje de éxito (cuando se guarda el registro) -->
+    <div th:if="${mensajeExito}" class="msg-box msg-success" th:text="${mensajeExito}"></div>
+
+    <!-- ❌ Mensaje general de error -->
+    <div th:if="${errorPrestamo}" class="msg-box msg-error" th:text="${errorPrestamo}"></div>
+
+    <!-- Formulario -->
     <form th:action="@{/biblioteca/prestamo/guardar}" th:object="${prestamo}" method="post">
-        <div th:if="${#fields.hasErrors()}" class="mb-4 p-3 bg-red-100 text-red-700 rounded">
+
+        <!-- Errores de validación global -->
+        <div th:if="${#fields.hasErrors()}" class="msg-box msg-error">
             <ul>
                 <li th:each="err : ${#fields.errors('*')}" th:text="${err}"></li>
             </ul>
         </div>
+
+        <!-- Fecha préstamo -->
         <label>Fecha Préstamo:</label>
-    <input type="date" th:field="*{fechaPrestamo}" readonly value="[[${#dates.format(#dates.createNow(), 'yyyy-MM-dd')}]]" /><br/>
-        <div th:if="${#fields.hasErrors('fechaPrestamo')}" class="text-red-600 text-sm" th:errors="*{fechaPrestamo}"></div>
+        <input type="date" th:field="*{fechaPrestamo}" readonly 
+               value="[[${#dates.format(#dates.createNow(), 'yyyy-MM-dd')}]]" />
+        <div th:if="${#fields.hasErrors('fechaPrestamo')}" class="error-msg" th:errors="*{fechaPrestamo}"></div>
+
+        <!-- Fecha devolución -->
         <label>Fecha Devolución:</label>
-        <input type="date" th:field="*{fechaDevolucion}" min="[[${#dates.format(#dates.createNow(), 'yyyy-MM-dd')}]]" /><br/>
-        <div th:if="${#fields.hasErrors('fechaDevolucion')}" class="text-red-600 text-sm" th:errors="*{fechaDevolucion}"></div>
-        <script>
-            document.addEventListener('DOMContentLoaded', function() {
-                const fechaDevolucion = document.querySelector('input[name="fechaDevolucion"]');
-                const fechaPrestamo = document.querySelector('input[name="fechaPrestamo"]');
-                const form = fechaDevolucion.closest('form');
-                form.addEventListener('submit', function(e) {
-                    const hoy = new Date().toISOString().split('T')[0];
-                    if (fechaDevolucion.value < hoy) {
-                        alert('No tiene permiso para poner una fecha anterior a hoy. Ingrese los datos correctamente.');
-                        e.preventDefault();
-                    }
-                });
-            });
-        </script>
+        <input type="date" th:field="*{fechaDevolucion}" 
+               min="[[${#dates.format(#dates.createNow(), 'yyyy-MM-dd')}]]" />
+        <div th:if="${#fields.hasErrors('fechaDevolucion')}" class="error-msg" th:errors="*{fechaDevolucion}"></div>
+
+        <!-- Observación -->
         <label>Observación:</label>
-        <input type="text" th:field="*{observacion}" /><br/>
+        <input type="text" th:field="*{observacion}" />
+        <div th:if="${#fields.hasErrors('observacion')}" class="error-msg" th:errors="*{observacion}"></div>
+
+        <!-- Libro -->
         <label>Libro:</label>
         <select th:field="*{libro.id}">
             <option value="" disabled selected>Seleccione un libro</option>
             <option th:each="libro : ${libros}" th:value="${libro.id}" th:text="${libro.titulo}"></option>
-        </select><br/>
-        <div th:if="${#fields.hasErrors('libro')}" class="text-red-600 text-sm" th:errors="*{libro}"></div>
+        </select>
+        <div th:if="${#fields.hasErrors('libro')}" class="error-msg" th:errors="*{libro}"></div>
+
+        <!-- Usuario -->
         <label>Usuario:</label>
         <select th:field="*{usuario.id}">
             <option value="" disabled selected>Seleccione un usuario</option>
             <option th:each="usuario : ${usuarios}" th:value="${usuario.id}" th:text="${usuario.nombreCompleto}"></option>
-        </select><br/>
-        <div th:if="${#fields.hasErrors('usuario')}" class="text-red-600 text-sm" th:errors="*{usuario}"></div>
+        </select>
+        <div th:if="${#fields.hasErrors('usuario')}" class="error-msg" th:errors="*{usuario}"></div>
+
+        <!-- Botones -->
         <button type="submit" th:text="${accion}"></button>
         <a th:href="@{/biblioteca/prestamos}">Cancelar</a>
-        <a th:href="@{/biblioteca/menu}" class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-semibold py-2 px-6 rounded-lg shadow transition" style="display:block;max-width:200px;margin:20px auto 0 auto;text-align:center;">Menú Principal</a>
+        <a th:href="@{/biblioteca/menu}" 
+           class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-semibold py-2 px-6 rounded-lg shadow transition"
+           style="display:block;max-width:200px;margin:20px auto 0 auto;text-align:center;">
+           Menú Principal
+        </a>
     </form>
 </body>
 </html>

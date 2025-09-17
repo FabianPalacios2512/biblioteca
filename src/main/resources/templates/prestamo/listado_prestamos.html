@@ -4,47 +4,81 @@
     <title>Listado de Préstamos</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body>
-    <!-- Tailwind CSS incluido -->
-    <h1 th:text="${titulo}" class="text-3xl font-bold text-center text-blue-900 mt-8 mb-6 tracking-wide">Listado de Préstamos</h1>
-    <div class="overflow-x-auto w-11/12 mx-auto mb-6">
-        <table class="min-w-full bg-white rounded-lg shadow-md">
-            <thead>
-                <tr>
-                    <th class="bg-gradient-to-r from-blue-700 to-teal-400 text-white py-3 px-2 text-sm">ID</th>
-                    <th class="bg-gradient-to-r from-blue-700 to-teal-400 text-white py-3 px-2 text-sm">Fecha Préstamo</th>
-                    <th class="bg-gradient-to-r from-blue-700 to-teal-400 text-white py-3 px-2 text-sm">Fecha Devolución</th>
-                    <th class="bg-gradient-to-r from-blue-700 to-teal-400 text-white py-3 px-2 text-sm">Observación</th>
-                    <th class="bg-gradient-to-r from-blue-700 to-teal-400 text-white py-3 px-2 text-sm">Libro</th>
-                    <th class="bg-gradient-to-r from-blue-700 to-teal-400 text-white py-3 px-2 text-sm">Usuario</th>
-                    <th class="bg-gradient-to-r from-blue-700 to-teal-400 text-white py-3 px-2 text-sm">Acciones</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr th:each="prestamo : ${prestamos}" class="hover:bg-blue-50">
-                    <td th:text="${prestamo.id}" class="py-2 px-2 border-b"></td>
-                    <td th:text="${prestamo.fechaPrestamo}" class="py-2 px-2 border-b"></td>
-                    <td th:text="${prestamo.fechaDevolucion}" class="py-2 px-2 border-b"></td>
-                    <td th:text="${prestamo.observacion}" class="py-2 px-2 border-b"></td>
-                    <td th:text="${prestamo.libro.titulo}" class="py-2 px-2 border-b"></td>
-                    <td th:text="${prestamo.usuario.nombreCompleto}" class="py-2 px-2 border-b"></td>
-                    <td class="py-2 px-2 border-b flex gap-2 justify-center">
-                        <a th:href="@{/biblioteca/prestamo/{id}(id=${prestamo.id})}" class="bg-blue-600 hover:bg-blue-800 text-white font-semibold py-1 px-3 rounded transition">Ver</a>
-                        <a th:href="@{/biblioteca/prestamo/eliminar/{id}(id=${prestamo.id})}" class="bg-red-500 hover:bg-red-700 text-white font-semibold py-1 px-3 rounded transition">Eliminar</a>
-                    </td>
-                </tr>
-                <tr th:if="${#lists.isEmpty(prestamos)}">
-                    <td colspan="7" class="text-center text-gray-500 py-8">No hay préstamos registrados.</td>
-                </tr>
-            </tbody>
-        </table>
+<body class="bg-gray-100 min-h-screen flex flex-col font-sans">
+
+    <!-- Título -->
+    <h1 th:text="${titulo}" 
+        class="text-3xl font-bold text-center text-blue-900 mt-10 mb-8 tracking-wide">
+        Listado de Préstamos
+    </h1>
+
+    <!-- Mensaje de éxito -->
+    <div th:if="${mensajeExito}" class="mb-4 p-3 bg-green-100 text-green-700 rounded text-center font-semibold">
+        <span th:text="${mensajeExito}"></span>
     </div>
-    <div class="flex justify-center mb-10">
-        <a th:href="@{/biblioteca/prestamo/nuevo}" class="bg-teal-500 hover:bg-teal-700 text-white font-bold py-3 px-8 rounded-lg shadow transition">+ Nuevo Préstamo</a>
+
+    <!-- Tabla centrada -->
+    <div class="flex-grow flex items-start justify-center px-4">
+        <div class="w-full max-w-6xl overflow-x-auto bg-white rounded-xl shadow-lg">
+            <table class="min-w-full text-sm text-gray-700">
+                <thead>
+                    <tr>
+                        <th class="bg-gradient-to-r from-blue-700 to-teal-400 text-white py-3 px-3">ID</th>
+                        <th class="bg-gradient-to-r from-blue-700 to-teal-400 text-white py-3 px-3">Fecha Préstamo</th>
+                        <th class="bg-gradient-to-r from-blue-700 to-teal-400 text-white py-3 px-3">Fecha Devolución</th>
+                        <th class="bg-gradient-to-r from-blue-700 to-teal-400 text-white py-3 px-3">Observación</th>
+                        <th class="bg-gradient-to-r from-blue-700 to-teal-400 text-white py-3 px-3">Libro</th>
+                        <th class="bg-gradient-to-r from-blue-700 to-teal-400 text-white py-3 px-3">Usuario</th>
+                        <th class="bg-gradient-to-r from-blue-700 to-teal-400 text-white py-3 px-3">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="prestamo : ${prestamos}" class="hover:bg-blue-50 transition">
+                        <td th:text="${prestamo.id}" class="py-2 px-3 border-b text-center"></td>
+                        <td th:text="${prestamo.fechaPrestamo}" class="py-2 px-3 border-b text-center"></td>
+                        <td th:text="${prestamo.fechaDevolucion}" class="py-2 px-3 border-b text-center"></td>
+                        <td th:text="${prestamo.observacion}" class="py-2 px-3 border-b text-center"></td>
+                        <td th:text="${prestamo.libro.titulo}" class="py-2 px-3 border-b text-center"></td>
+                        <td th:text="${prestamo.usuario.nombreCompleto}" class="py-2 px-3 border-b text-center"></td>
+                        <td class="py-2 px-3 border-b flex gap-2 justify-center">
+                            <a th:href="@{/biblioteca/prestamo/{id}(id=${prestamo.id})}" 
+                               class="bg-blue-600 hover:bg-blue-800 text-white font-medium py-1 px-3 rounded-lg shadow transition">
+                               Ver
+                            </a>
+                            <a th:href="@{/biblioteca/prestamo/eliminar/{id}(id=${prestamo.id})}" 
+                               class="bg-red-500 hover:bg-red-700 text-white font-medium py-1 px-3 rounded-lg shadow transition">
+                               Eliminar
+                            </a>
+                        </td>
+                    </tr>
+                    <tr th:if="${#lists.isEmpty(prestamos)}">
+                        <td colspan="7" class="text-center text-gray-500 py-8">
+                            No hay préstamos registrados.
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
     </div>
-    </table>
-    <div class="flex justify-center mb-10">
-        <a th:href="@{/biblioteca/menu}" class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-semibold py-2 px-6 rounded-lg shadow transition">Menú Principal</a>
+
+    <!-- Botones -->
+    <div class="flex flex-col md:flex-row justify-center gap-4 my-10">
+        <a th:href="@{/biblioteca/prestamo/nuevo}" 
+           class="bg-teal-500 hover:bg-teal-700 text-white font-semibold py-3 px-8 rounded-lg shadow transition text-center">
+            + Nuevo Préstamo
+        </a>
+        <a th:href="@{/biblioteca/menu}" 
+           class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-semibold py-3 px-8 rounded-lg shadow transition text-center">
+            Menú Principal
+        </a>
     </div>
+
+    <!-- Footer -->
+    <footer class="bg-gray-200 border-t border-gray-300 py-6 mt-auto">
+        <div class="max-w-6xl mx-auto text-center text-gray-600 text-sm">
+            <p>&copy; 2025 <span class="font-semibold text-blue-700">Biblioteca</span>. Todos los derechos reservados.</p>
+        </div>
+    </footer>
+
 </body>
 </html>

@@ -11,16 +11,19 @@ public class Usuario implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(length = 10, nullable = false)
-    @NotEmpty
+    @Column(length = 10, nullable = false, unique = true)
+    @NotEmpty(message = "usuario.identificacion.obligatorio")
+    @Pattern(regexp = "^[0-9]+$", message = "usuario.identificacion.numeros")
     private String identificacion;
 
     @Column(length = 15, nullable = false)
-    @NotEmpty
+    @NotEmpty(message = "usuario.telefono.obligatorio")
+    @Pattern(regexp = "^[0-9]+$", message = "usuario.telefono.numeros")
     private String telefonoMovil;
 
     @Column(length = 80, nullable = false)
-    @NotEmpty
+    @NotEmpty(message = "usuario.nombre.obligatorio")
+    @Pattern(regexp = "^[A-Za-zÁÉÍÓÚáéíóúÑñ ]+$", message = "usuario.nombre.letras")
     private String nombreCompleto;
 
     @Column(length = 100, nullable = false)

@@ -65,22 +65,37 @@ public class BibliotecaController {
     }
 
     @PostMapping("/usuario/guardar")
-    public String guardarUsuario(@ModelAttribute Usuario usuario) {
-        bibliotecaService.guardarUsuario(usuario);
-        return "redirect:/biblioteca/usuarios";
+    public String guardarUsuario(@ModelAttribute Usuario usuario, Model model) {
+        try {
+            bibliotecaService.guardarUsuario(usuario);
+            return "redirect:/biblioteca/usuarios";
+        } catch (IllegalStateException e) {
+            model.addAttribute("usuario", usuario);
+            model.addAttribute("accion", usuario.getId() == null ? "Crear" : "Editar");
+            model.addAttribute("titulo", usuario.getId() == null ? "Nuevo Usuario" : "Editar Usuario");
+            model.addAttribute("errorUsuario", e.getMessage());
+            return "usuario/formulario_usuario";
+        }
     }
 
     @GetMapping("/usuario/eliminar/{id}")
-    public String eliminarUsuario(@PathVariable Long id) {
-        bibliotecaService.eliminarUsuarioPorId(id);
+    public String eliminarUsuario(@PathVariable Long id, org.springframework.web.servlet.mvc.support.RedirectAttributes redirectAttributes) {
+        try {
+            bibliotecaService.eliminarUsuarioPorId(id);
+            redirectAttributes.addFlashAttribute("mensajeExito", "Usuario eliminado correctamente.");
+        } catch (IllegalStateException e) {
+            redirectAttributes.addFlashAttribute("mensajeError", e.getMessage());
+        }
         return "redirect:/biblioteca/usuarios";
     }
 
     // --- LIBROS ---
     @GetMapping("/libros")
-    public String listarLibros(Model model) {
-        List<Libro> libros = bibliotecaService.buscarLibrosTodos();
-        model.addAttribute("libros", libros);
+    public String listarLibros(@RequestParam(defaultValue = "0") int page, Model model) {
+        org.springframework.data.domain.Pageable pageable = org.springframework.data.domain.PageRequest.of(page, 7);
+        org.springframework.data.domain.Page<Libro> pageLibros = bibliotecaService.buscarLibrosPaginados(pageable);
+        model.addAttribute("libros", pageLibros.getContent());
+        model.addAttribute("page", pageLibros);
         model.addAttribute("titulo", "Listado de Libros");
         return "libro/listado_libros";
     }
@@ -143,9 +158,10 @@ public class BibliotecaController {
     }
 
     @PostMapping("/prestamo/guardar")
-    public String guardarPrestamo(@ModelAttribute Prestamo prestamo, Model model) {
+    public String guardarPrestamo(@ModelAttribute Prestamo prestamo, Model model, org.springframework.web.servlet.mvc.support.RedirectAttributes redirectAttributes) {
         try {
             bibliotecaService.guardarPrestamo(prestamo);
+            redirectAttributes.addFlashAttribute("mensajeExito", "Datos guardados correctamente.");
             return "redirect:/biblioteca/prestamos";
         } catch (IllegalStateException e) {
             // Si el usuario tiene el máximo de préstamos, mostrar mensaje en el formulario

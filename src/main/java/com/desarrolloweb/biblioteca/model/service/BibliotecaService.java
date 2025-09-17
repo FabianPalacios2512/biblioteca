@@ -1,10 +1,11 @@
 package com.desarrolloweb.biblioteca.model.service;
 
 import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.context.MessageSource;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import com.desarrolloweb.biblioteca.model.dao.LibroDAO;
 import com.desarrolloweb.biblioteca.model.dao.PrestamoDAO;
@@ -15,12 +16,16 @@ import com.desarrolloweb.biblioteca.model.entity.Usuario;
 
 @Service
 public class BibliotecaService implements BibliotecaServiceIface {
+    @Override
+    @Transactional(readOnly = true)
+    public Page<Libro> buscarLibrosPaginados(Pageable pageable) {
+        return libroDAO.findAll(pageable);
+    }
     private final LibroDAO libroDAO;
     private final UsuarioDAO usuarioDAO;
     private final PrestamoDAO prestamoDAO;
     private final MessageSource messageSource;
 
-    @Autowired
     public BibliotecaService(LibroDAO libroDAO, UsuarioDAO usuarioDAO, PrestamoDAO prestamoDAO, MessageSource messageSource) {
         this.libroDAO = libroDAO;
         this.usuarioDAO = usuarioDAO;
@@ -37,10 +42,22 @@ public class BibliotecaService implements BibliotecaServiceIface {
     public Usuario buscarUsuarioPorId(Long id) { return usuarioDAO.findById(id).orElse(null); }
     @Override
     @Transactional
-    public void guardarUsuario(Usuario usuario) { usuarioDAO.save(usuario); }
+    public void guardarUsuario(Usuario usuario) {
+        Usuario existente = usuarioDAO.findByIdentificacion(usuario.getIdentificacion());
+        if (existente != null && (usuario.getId() == null || !existente.getId().equals(usuario.getId()))) {
+            throw new IllegalStateException(messageSource.getMessage("usuario.identificacion.duplicada", null, java.util.Locale.getDefault()));
+        }
+        usuarioDAO.save(usuario);
+    }
     @Override
     @Transactional
-    public void eliminarUsuarioPorId(Long id) { usuarioDAO.deleteById(id); }
+    public void eliminarUsuarioPorId(Long id) {
+        long prestamos = prestamoDAO.countByUsuarioId(id);
+        if (prestamos > 0) {
+            throw new IllegalStateException(messageSource.getMessage("usuario.eliminar.con.prestamos", null, java.util.Locale.getDefault()));
+        }
+        usuarioDAO.deleteById(id);
+    }
 
     // Libro
     @Override

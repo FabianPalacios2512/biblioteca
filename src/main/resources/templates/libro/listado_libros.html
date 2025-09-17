@@ -4,46 +4,78 @@
     <title>Listado de Libros</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body>
-    <!-- Tailwind CSS incluido -->
-    <h1 th:text="${titulo}" class="text-3xl font-bold text-center text-blue-900 mt-8 mb-6 tracking-wide">Listado de Libros</h1>
-    <div class="overflow-x-auto w-11/12 mx-auto mb-6">
-        <table class="min-w-full bg-white rounded-lg shadow-md">
-            <thead>
-                <tr>
-                    <th class="bg-gradient-to-r from-blue-700 to-teal-400 text-white py-3 px-2 text-sm">ID</th>
-                    <th class="bg-gradient-to-r from-blue-700 to-teal-400 text-white py-3 px-2 text-sm">ISBN</th>
-                    <th class="bg-gradient-to-r from-blue-700 to-teal-400 text-white py-3 px-2 text-sm">Título</th>
-                    <th class="bg-gradient-to-r from-blue-700 to-teal-400 text-white py-3 px-2 text-sm">Autor</th>
-                    <th class="bg-gradient-to-r from-blue-700 to-teal-400 text-white py-3 px-2 text-sm">Editorial</th>
-                    <th class="bg-gradient-to-r from-blue-700 to-teal-400 text-white py-3 px-2 text-sm">Año</th>
-                    <th class="bg-gradient-to-r from-blue-700 to-teal-400 text-white py-3 px-2 text-sm">Edición</th>
-                    <th class="bg-gradient-to-r from-blue-700 to-teal-400 text-white py-3 px-2 text-sm">Acciones</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr th:each="libro : ${libros}" class="hover:bg-blue-50">
-                    <td th:text="${libro.id}" class="py-2 px-2 border-b"></td>
-                    <td th:text="${libro.isbn}" class="py-2 px-2 border-b"></td>
-                    <td th:text="${libro.titulo}" class="py-2 px-2 border-b"></td>
-                    <td th:text="${libro.autor}" class="py-2 px-2 border-b"></td>
-                    <td th:text="${libro.editorial}" class="py-2 px-2 border-b"></td>
-                    <td th:text="${libro.anio}" class="py-2 px-2 border-b"></td>
-                    <td th:text="${libro.edicion}" class="py-2 px-2 border-b"></td>
-                    <td class="py-2 px-2 border-b flex gap-2 justify-center">
-                        <a th:href="@{/biblioteca/libro/{id}(id=${libro.id})}" class="bg-blue-600 hover:bg-blue-800 text-white font-semibold py-1 px-3 rounded transition">Ver</a>
-                        <a th:href="@{/biblioteca/libro/eliminar/{id}(id=${libro.id})}" class="bg-red-500 hover:bg-red-700 text-white font-semibold py-1 px-3 rounded transition">Eliminar</a>
-                    </td>
-                </tr>
-                <tr th:if="${#lists.isEmpty(libros)}">
-                    <td colspan="8" class="text-center text-gray-500 py-8">No hay libros registrados.</td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
-    <div class="flex flex-col items-center gap-4 mb-10">
-        <a th:href="@{/biblioteca/libro/nuevo}" class="bg-teal-500 hover:bg-teal-700 text-white font-bold py-3 px-8 rounded-lg shadow transition">+ Nuevo Libro</a>
-        <a th:href="@{/biblioteca/menu}" class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-semibold py-2 px-6 rounded-lg shadow transition">Menú Principal</a>
-    </div>
+<body class="bg-gray-100 min-h-screen flex flex-col">
+
+    <!-- Título -->
+    <header class="text-center my-10">
+        <h1 th:text="${titulo}" class="text-4xl font-extrabold text-blue-900 tracking-wide">
+            Listado de Libros
+        </h1>
+    </header>
+
+    <!-- Tabla -->
+    <main class="flex-1 w-11/12 max-w-6xl mx-auto">
+        <div class="overflow-x-auto rounded-lg shadow-lg">
+            <table class="min-w-full bg-white">
+                <thead>
+                    <tr class="bg-gradient-to-r from-blue-700 to-teal-500 text-white text-sm uppercase tracking-wider">
+                        <th class="py-3 px-4 text-left">ID</th>
+                        <th class="py-3 px-4 text-left">ISBN</th>
+                        <th class="py-3 px-4 text-left">Título</th>
+                        <th class="py-3 px-4 text-left">Autor</th>
+                        <th class="py-3 px-4 text-left">Editorial</th>
+                        <th class="py-3 px-4 text-left">Año</th>
+                        <th class="py-3 px-4 text-left">Edición</th>
+                        <th class="py-3 px-4 text-center">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-gray-200">
+                    <!-- Filas dinámicas -->
+                    <tr th:each="libro : ${libros}" class="hover:bg-blue-50">
+                        <td th:text="${libro.id}" class="py-3 px-4"></td>
+                        <td th:text="${libro.isbn}" class="py-3 px-4"></td>
+                        <td th:text="${libro.titulo}" class="py-3 px-4"></td>
+                        <td th:text="${libro.autor}" class="py-3 px-4"></td>
+                        <td th:text="${libro.editorial}" class="py-3 px-4"></td>
+                        <td th:text="${libro.anio}" class="py-3 px-4"></td>
+                        <td th:text="${libro.edicion}" class="py-3 px-4"></td>
+                        <td class="py-3 px-4 flex justify-center gap-3">
+                            <a th:href="@{/biblioteca/libro/{id}(id=${libro.id})}" 
+                               class="bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium px-4 py-2 rounded-lg shadow transition">
+                                Ver
+                            </a>
+                            <a th:href="@{/biblioteca/libro/eliminar/{id}(id=${libro.id})}" 
+                               class="bg-red-500 hover:bg-red-600 text-white text-sm font-medium px-4 py-2 rounded-lg shadow transition">
+                                Eliminar
+                            </a>
+                        </td>
+                    </tr>
+
+                    <!-- Mensaje cuando no hay registros -->
+                    <tr th:if="${#lists.isEmpty(libros)}">
+                        <td colspan="8" class="text-center text-gray-500 py-8">
+                            No hay libros registrados.
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <!-- Paginador reutilizable -->
+        <div th:replace="plantillas/paginator :: paginator(${page})"></div>
+    </main>
+
+    <!-- Botones inferiores -->
+    <footer class="flex flex-col md:flex-row justify-center items-center gap-4 my-10">
+        <a th:href="@{/biblioteca/libro/nuevo}" 
+           class="bg-teal-600 hover:bg-teal-700 text-white font-semibold px-6 py-3 rounded-lg shadow transition">
+            + Nuevo Libro
+        </a>
+        <a th:href="@{/biblioteca/menu}" 
+           class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-medium px-6 py-3 rounded-lg shadow transition">
+            Menú Principal
+        </a>
+    </footer>
+    <!-- Floter profesional -->
+    <div th:replace="plantillas/floter :: floter"></div>
 </body>
 </html>

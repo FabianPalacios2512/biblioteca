@@ -2,25 +2,46 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>Consulta de Préstamo</title>
-    <link rel="stylesheet" th:href="@{/css/estilos.css}" />
+    <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body>
-    <style>
-        body { font-family: 'Segoe UI', Arial, sans-serif; background: #f7f7f7; }
-        h1 { color: #2c3e50; margin-top: 30px; text-align: center; }
-        p { background: #fff; border-radius: 6px; box-shadow: 0 2px 6px #eee; padding: 10px 20px; margin: 10px auto; max-width: 400px; }
-        strong { color: #34495e; }
-        a { display: block; margin: 30px auto; text-align: center; color: #2980b9; text-decoration: none; font-weight: bold; }
-        a:hover { color: #1abc9c; }
-    </style>
-    <h1 th:text="${titulo}">Consulta de Préstamo</h1>
-    <p><strong>ID:</strong> <span th:text="${prestamo.id}"></span></p>
-    <p><strong>Fecha Préstamo:</strong> <span th:text="${prestamo.fechaPrestamo}"></span></p>
-    <p><strong>Fecha Devolución:</strong> <span th:text="${prestamo.fechaDevolucion}"></span></p>
-    <p><strong>Observación:</strong> <span th:text="${prestamo.observacion}"></span></p>
-    <p><strong>Libro:</strong> <span th:text="${prestamo.libro.titulo}"></span></p>
-    <p><strong>Usuario:</strong> <span th:text="${prestamo.usuario.nombreCompleto}"></span></p>
-    <a th:href="@{/biblioteca/prestamos}">Volver al listado</a>
-    <a th:href="@{/biblioteca/menu}" class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-semibold py-2 px-6 rounded-lg shadow transition" style="display:block;max-width:200px;margin:20px auto 0 auto;text-align:center;">Menú Principal</a>
+<body class="bg-gray-100 min-h-screen flex flex-col font-sans">
+
+    <!-- Título -->
+    <h1 th:text="${titulo}" 
+        class="text-3xl font-bold text-center text-blue-900 mt-10 mb-8 tracking-wide">
+        Consulta de Préstamo
+    </h1>
+
+    <!-- Tarjeta centrada -->
+    <div class="flex-grow flex items-start justify-center px-4">
+        <div class="bg-white rounded-xl shadow-lg p-8 w-full max-w-lg">
+            <p class="mb-4"><strong class="text-gray-700">ID:</strong> <span th:text="${prestamo.id}" class="text-gray-600"></span></p>
+            <p class="mb-4"><strong class="text-gray-700">Fecha Préstamo:</strong> <span th:text="${prestamo.fechaPrestamo}" class="text-gray-600"></span></p>
+            <p class="mb-4"><strong class="text-gray-700">Fecha Devolución:</strong> <span th:text="${prestamo.fechaDevolucion}" class="text-gray-600"></span></p>
+            <p class="mb-4"><strong class="text-gray-700">Observación:</strong> <span th:text="${prestamo.observacion}" class="text-gray-600"></span></p>
+            <p class="mb-4"><strong class="text-gray-700">Libro:</strong> <span th:text="${prestamo.libro.titulo}" class="text-gray-600"></span></p>
+            <p class="mb-6"><strong class="text-gray-700">Usuario:</strong> <span th:text="${prestamo.usuario.nombreCompleto}" class="text-gray-600"></span></p>
+
+            <!-- Botones -->
+            <div class="flex flex-col md:flex-row gap-4 justify-center">
+                <a th:href="@{/biblioteca/prestamos}" 
+                   class="bg-blue-600 hover:bg-blue-800 text-white font-semibold py-2 px-6 rounded-lg shadow transition text-center">
+                    Volver al listado
+                </a>
+                <a th:href="@{/biblioteca/menu}" 
+                   class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-semibold py-2 px-6 rounded-lg shadow transition text-center">
+                    Menú Principal
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-gray-200 border-t border-gray-300 py-6 mt-auto">
+        <div class="max-w-6xl mx-auto text-center text-gray-600 text-sm">
+            <p>&copy; 2025 <span class="font-semibold text-blue-700">Biblioteca</span>. Todos los derechos reservados.</p>
+        </div>
+    </footer>
+
 </body>
 </html>
